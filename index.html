@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南投縣中小學天然災害搶修搶險災損回報系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d3748;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .data-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border: 1px solid #90cdf4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+            transform: scale(1.02);
+        }
+
+        .file-upload-prompt {
+            padding: 20px;
+        }
+
+        .attachment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .attachment-modal.show {
+            display: flex;
+        }
+
+        .attachment-modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 南投縣中小學天然災害搶修搶險災損回報系統</h1>
+            <p>統一管理天然災害搶修搶險災損狀況回報與經費需求統計</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('report')">災損回報</button>
+            <button class="nav-tab" onclick="showTab('statistics')">統計分析</button>
+            <button class="nav-tab" onclick="showTab('data')">數據管理</button>
+        </div>
+
+        <!-- 災損回報表單 -->
+        <div id="report" class="tab-content active">
+            <h2 style="margin-bottom: 25px; color: #2d3748;">災損情況回報</h2>
+            
+            <form id="damageForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="township">鄉鎮市 *</label>
+                        <select id="township" name="township" required>
+                            <option value="">請選擇鄉鎮市</option>
+                            <option value="南投市">南投市</option>
+                            <option value="草屯鎮">草屯鎮</option>
+                            <option value="埔里鎮">埔里鎮</option>
+                            <option value="集集鎮">集集鎮</option>
+                            <option value="竹山鎮">竹山鎮</option>
+                            <option value="中寮鄉">中寮鄉</option>
+                            <option value="國姓鄉">國姓鄉</option>
+                            <option value="仁愛鄉">仁愛鄉</option>
+                            <option value="名間鄉">名間鄉</option>
+                            <option value="水里鄉">水里鄉</option>
+                            <option value="魚池鄉">魚池鄉</option>
+                            <option value="信義鄉">信義鄉</option>
+                            <option value="鹿谷鄉">鹿谷鄉</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="schoolName">學校名稱 *</label>
+                        <input type="text" id="schoolName" name="schoolName" placeholder="請輸入學校簡稱，例如：康壽國小、中興國中、南投高中等" required>
+                        <small style="color: #718096; font-size: 0.9rem; margin-top: 5px; display: block;">
+                            💡 請使用學校簡稱，例如：康壽國小、中興國中、南投高中、草屯商工等
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPerson">聯絡人 *</label>
+                        <input type="text" id="contactPerson" name="contactPerson" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">聯絡電話 *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">電子郵件</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="disasterType">災害類型 *</label>
+                        <select id="disasterType" name="disasterType" required>
+                            <option value="">請選擇災害類型</option>
+                            <option value="颱風">🌪️ 颱風</option>
+                            <option value="地震">🏗️ 地震</option>
+                            <option value="豪雨">🌧️ 豪雨</option>
+                            <option value="淹水">🌊 淹水</option>
+                            <option value="土石流">🏔️ 土石流</option>
+                            <option value="火災">🔥 火災</option>
+                            <option value="其它(寒害)">❄️ 其它(寒害)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="damageType">災損類型 *</label>
+                        <select id="damageType" name="damageType" required>
+                            <option value="">請選擇災損類型</option>
+                            <option value="建築物損壞">建築物損壞</option>
+                            <option value="設備損壞">設備損壞</option>
+                            <option value="圖書資料損失">圖書資料損失</option>
+                            <option value="運動場地損壞">運動場地損壞</option>
+                            <option value="其他設施損壞">其他設施損壞</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="severity">嚴重程度 *</label>
+                        <select id="severity" name="severity" required>
+                            <option value="">請選擇嚴重程度</option>
+                            <option value="輕微">輕微</option>
+                            <option value="中等">中等</option>
+                            <option value="嚴重">嚴重</option>
+                            <option value="極嚴重">極嚴重</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimatedCost">預估修復費用 (新台幣) *</label>
+                        <input type="number" id="estimatedCost" name="estimatedCost" min="0" step="1000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgency">緊急程度 *</label>
+                        <select id="urgency" name="urgency" required>
+                            <option value="">請選擇緊急程度</option>
+                            <option value="立即處理">立即處理</option>
+                            <option value="一週內">一週內</option>
+                            <option value="一個月內">一個月內</option>
+                            <option value="下學期前">下學期前</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">詳細描述 *</label>
+                    <textarea id="description" name="description" placeholder="請詳細描述災損狀況、影響範圍及緊急性..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="attachments">上傳附件至 Google Drive</label>
+                    <div class="file-upload-area" id="fileUploadArea" onclick="openGoogleDrive()">
+                        <div class="file-upload-prompt">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">📁</div>
+                            <p><strong>點擊直接前往 Google Drive 上傳附件</strong></p>
+                            <p style="font-size: 0.9rem; color: #718096; margin-top: 5px;">
+                                <strong>支援格式：</strong>PDF、Word文檔（.docx）<br>
+                                <strong>檔案數量：</strong>最多上傳2個檔案，單檔最大10MB<br>
+                                <strong>⚠️ 重要：</strong>檔案名稱請以學校名稱命名
+                            </p>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" style="margin-top: 10px;">
+                        <strong>📋 檔案上傳說明：</strong><br>
+                        • <strong>檔案命名規範：</strong>請將檔案以您的學校名稱命名（例如：台北市立第一中學.pdf）<br>
+                        • <strong>上傳位置：</strong>點擊上方區域將直接開啟 Google Drive 存放資料夾<br>
+                        • <strong>存放區域：</strong>
+                        <a href="https://drive.google.com/drive/folders/1glBATd13yZgUowD0g7yXBcghb0HmqpST?usp=sharing" target="_blank" style="color: #667eea; text-decoration: underline;">
+                            📁 災損回報檔案存放區
+                        </a><br>
+                        • <strong>操作流程：</strong>填寫表單 → 點擊上傳區域 → 在 Google Drive 中上傳檔案 → 提交表單
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>
+                            <input type="checkbox" id="attachmentConfirm" name="attachmentConfirm" style="margin-right: 8px;">
+                            我已將相關附件檔案上傳至 Google Drive 災損回報檔案存放區
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">提交災損回報</button>
+            </form>
+        </div>
+
+        <!-- 統計分析 -->
+        <div id="statistics" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #2d3748;">南投縣災損統計分析</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalReports">0</h3>
+                    <p>總回報數量</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalCost">$0</h3>
+                    <p>總預估費用</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="avgCost">$0</h3>
+                    <p>平均修復費用</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="urgentReports">0</h3>
+                    <p>緊急案件</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="townshipCount">0</h3>
+                    <p>涉及鄉鎮市</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="disasterTypes">0</h3>
+                    <p>災害類型數</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 15px;">鄉鎮市分布</h3>
+                <div id="townshipChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 15px;">災害類型分布</h3>
+                <div id="disasterTypeChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 15px;">災損類型分布</h3>
+                <div id="damageTypeChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 15px;">嚴重程度分布</h3>
+                <div id="severityChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 15px;">緊急程度分析</h3>
+                <div id="urgencyChart"></div>
+            </div>
+        </div>
+
+        <!-- 數據管理 -->
+        <div id="data" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #2d3748;">數據管理</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <button class="btn" onclick="exportData()" style="margin-right: 10px;">匯出數據</button>
+                <button class="btn" onclick="openGoogleDrive()" style="background: linear-gradient(135deg, #34d399 0%, #10b981 100%); margin-right: 10px;">📁 開啟 Google Drive</button>
+                <button class="btn" onclick="clearAllData()" style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);">清空所有數據</button>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>📁 檔案存放說明：</strong><br>
+                • 所有災損回報的附件檔案請統一上傳至：
+                <a href="https://drive.google.com/drive/folders/1glBATd13yZgUowD0g7yXBcghb0HmqpST?usp=sharing" target="_blank" style="color: #667eea; text-decoration: underline;">
+                    Google Drive 災損回報檔案存放區
+                </a><br>
+                • 檔案請以學校名稱命名（例如：台北市立第一中學.pdf）<br>
+                • 支援格式：PDF、Word文檔（.docx），最多2個檔案<br>
+                • 網站數據僅保存在瀏覽器本地，請定期匯出備份
+            </div>
+
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>鄉鎮市</th>
+                        <th>學校名稱</th>
+                        <th>災害類型</th>
+                        <th>災損類型</th>
+                        <th>嚴重程度</th>
+                        <th>預估費用</th>
+                        <th>緊急程度</th>
+                        <th>聯絡人</th>
+                        <th>Google Drive 附件</th>
+                        <th>回報時間</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 數據存儲（使用內存存儲）
+        let damageReports = [];
+
+        // 頁面載入時初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSampleData();
+            updateStatistics();
+            updateDataTable();
+        });
+
+        // 載入示例數據
+        function loadSampleData() {
+            const sampleData = [
+                {
+                    id: 1,
+                    township: "南投市",
+                    schoolName: "康壽國小",
+                    contactPerson: "張主任",
+                    phone: "049-2222222",
+                    email: "chang@ntes.ntct.edu.tw",
+                    disasterType: "地震",
+                    damageType: "建築物損壞",
+                    severity: "中等",
+                    estimatedCost: 150000,
+                    urgency: "一週內",
+                    description: "教學大樓三樓因地震造成牆面龜裂，需要結構檢查及修復，影響2間教室正常使用",
+                    hasAttachments: false,
+                    timestamp: new Date('2024-01-15').toLocaleString('zh-TW')
+                },
+                {
+                    id: 2,
+                    township: "草屯鎮",
+                    schoolName: "中興國中",
+                    contactPerson: "李校長",
+                    phone: "049-3333333",
+                    email: "principal@chshs.ntct.edu.tw",
+                    disasterType: "淹水",
+                    damageType: "設備損壞",
+                    severity: "嚴重",
+                    estimatedCost: 80000,
+                    urgency: "立即處理",
+                    description: "電腦教室因淹水導致20台電腦主機損壞，影響教學，急需更換設備",
+                    hasAttachments: true,
+                    timestamp: new Date('2024-01-16').toLocaleString('zh-TW')
+                },
+                {
+                    id: 3,
+                    township: "埔里鎮",
+                    schoolName: "埔里高中",
+                    contactPerson: "王老師",
+                    phone: "049-4444444",
+                    email: "wang@plsh.ntct.edu.tw",
+                    disasterType: "颱風",
+                    damageType: "運動場地損壞",
+                    severity: "輕微",
+                    estimatedCost: 50000,
+                    urgency: "一個月內",
+                    description: "操場跑道因颱風後積水導致部分區域龜裂，需要重新鋪設塑膠跑道",
+                    hasAttachments: false,
+                    timestamp: new Date('2024-01-17').toLocaleString('zh-TW')
+                }
+            ];
+            damageReports = sampleData;
+        }
+
+        // 標籤切換功能
+        function showTab(tabName) {
+            // 隱藏所有標籤內容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // 移除所有標籤的 active 類
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // 顯示選中的標籤內容
+            document.getElementById(tabName).classList.add('active');
+
+            // 為選中的標籤添加 active 類
+            event.target.classList.add('active');
+
+            // 如果切換到統計頁面，更新統計數據
+            if (tabName === 'statistics') {
+                updateStatistics();
+                updateCharts();
+            } else if (tabName === 'data') {
+                updateDataTable();
+            }
+        }
+
+        // 表單提交處理
+        document.getElementById('damageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // 驗證必填欄位
+            const requiredFields = ['township', 'schoolName', 'contactPerson', 'phone', 'disasterType', 'damageType', 'severity', 'estimatedCost', 'urgency', 'description'];
+            
+            for (let field of requiredFields) {
+                if (!formData.get(field)) {
+                    showAlert(`請填寫 ${field} 欄位`, 'error');
+                    return;
+                }
+            }
+            
+            // 建立報告數據
+            const reportData = {
+                id: Date.now(),
+                township: formData.get('township'),
+                schoolName: formData.get('schoolName'),
+                contactPerson: formData.get('contactPerson'),
+                phone: formData.get('phone'),
+                email: formData.get('email') || '',
+                disasterType: formData.get('disasterType'),
+                damageType: formData.get('damageType'),
+                severity: formData.get('severity'),
+                estimatedCost: parseInt(formData.get('estimatedCost')),
+                urgency: formData.get('urgency'),
+                description: formData.get('description'),
+                hasAttachments: formData.get('attachmentConfirm') === 'on',
+                timestamp: new Date().toLocaleString('zh-TW')
+            };
+
+            damageReports.push(reportData);
+            
+            // 顯示成功訊息
+            if (reportData.hasAttachments) {
+                showAlert('災損回報已成功提交！附件請確認已上傳至 Google Drive 存放區。', 'success');
+            } else {
+                showAlert('災損回報已成功提交！', 'success');
+            }
+            
+            // 清空表單
+            this.reset();
+            
+            // 更新統計
+            updateStatistics();
+            
+            console.log('新增報告數據：', reportData);
+        });
+
+        // 顯示提示訊息
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            // 根據當前頁面決定插入位置
+            const activeTab = document.querySelector('.tab-content.active');
+            const targetElement = activeTab.querySelector('form') || activeTab.querySelector('h2');
+            
+            if (targetElement) {
+                targetElement.parentNode.insertBefore(alert, targetElement);
+            } else {
+                activeTab.insertBefore(alert, activeTab.firstChild);
+            }
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // 更新統計數據
+        function updateStatistics() {
+            const totalReports = damageReports.length;
+            const totalCost = damageReports.reduce((sum, report) => sum + report.estimatedCost, 0);
+            const avgCost = totalReports > 0 ? Math.round(totalCost / totalReports) : 0;
+            const urgentReports = damageReports.filter(report => report.urgency === '立即處理').length;
+            
+            // 計算不同災害類型數量
+            const uniqueDisasterTypes = new Set(damageReports.map(report => report.disasterType)).size;
+
+            document.getElementById('totalReports').textContent = totalReports;
+            document.getElementById('totalCost').textContent = `${totalCost.toLocaleString()}`;
+            document.getElementById('avgCost').textContent = `${avgCost.toLocaleString()}`;
+            document.getElementById('urgentReports').textContent = urgentReports;
+            document.getElementById('disasterTypes').textContent = uniqueDisasterTypes;
+        }
+
+        // 更新圖表
+        function updateCharts() {
+            updateTownshipChart();
+            updateDisasterTypeChart();
+            updateDamageTypeChart();
+            updateSeverityChart();
+            updateUrgencyChart();
+        }
+
+        function updateTownshipChart() {
+            const townshipCount = {};
+            damageReports.forEach(report => {
+                const township = report.township || '未指定';
+                townshipCount[township] = (townshipCount[township] || 0) + 1;
+            });
+
+            const chartHtml = Object.entries(townshipCount).map(([township, count]) => {
+                const percentage = damageReports.length > 0 ? (count / damageReports.length * 100) : 0;
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${township}</span>
+                            <span>${count} (${percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div style="background: #10b981; height: 100%; width: ${percentage}%; transition: width 0.5s ease;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('townshipChart').innerHTML = chartHtml || '<p>暫無數據</p>';
+        }
+
+        function updateDisasterTypeChart() {
+            const typeCount = {};
+            damageReports.forEach(report => {
+                typeCount[report.disasterType] = (typeCount[report.disasterType] || 0) + 1;
+            });
+
+            const chartHtml = Object.entries(typeCount).map(([type, count]) => {
+                const percentage = damageReports.length > 0 ? (count / damageReports.length * 100) : 0;
+                // 根據災害類型設定顏色
+                let color = '#667eea';
+                switch(type) {
+                    case '颱風': color = '#60a5fa'; break;
+                    case '地震': color = '#f59e0b'; break;
+                    case '豪雨': color = '#3b82f6'; break;
+                    case '淹水': color = '#06b6d4'; break;
+                    case '土石流': color = '#92400e'; break;
+                    case '火災': color = '#dc2626'; break;
+                    case '其它(寒害)': color = '#7c3aed'; break;
+                }
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${type}</span>
+                            <span>${count} (${percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div style="background: ${color}; height: 100%; width: ${percentage}%; transition: width 0.5s ease;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('disasterTypeChart').innerHTML = chartHtml || '<p>暫無數據</p>';
+        }
+
+        function updateDamageTypeChart() {
+            const typeCount = {};
+            damageReports.forEach(report => {
+                typeCount[report.damageType] = (typeCount[report.damageType] || 0) + 1;
+            });
+
+            const chartHtml = Object.entries(typeCount).map(([type, count]) => {
+                const percentage = damageReports.length > 0 ? (count / damageReports.length * 100) : 0;
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${type}</span>
+                            <span>${count} (${percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('damageTypeChart').innerHTML = chartHtml || '<p>暫無數據</p>';
+        }
+
+        function updateSeverityChart() {
+            const severityCount = {};
+            damageReports.forEach(report => {
+                severityCount[report.severity] = (severityCount[report.severity] || 0) + 1;
+            });
+
+            const chartHtml = Object.entries(severityCount).map(([severity, count]) => {
+                const percentage = damageReports.length > 0 ? (count / damageReports.length * 100) : 0;
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${severity}</span>
+                            <span>${count} (${percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('severityChart').innerHTML = chartHtml || '<p>暫無數據</p>';
+        }
+
+        function updateUrgencyChart() {
+            const urgencyCount = {};
+            damageReports.forEach(report => {
+                urgencyCount[report.urgency] = (urgencyCount[report.urgency] || 0) + 1;
+            });
+
+            const chartHtml = Object.entries(urgencyCount).map(([urgency, count]) => {
+                const percentage = damageReports.length > 0 ? (count / damageReports.length * 100) : 0;
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${urgency}</span>
+                            <span>${count} (${percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('urgencyChart').innerHTML = chartHtml || '<p>暫無數據</p>';
+        }
+
+        // 更新數據表格
+        function updateDataTable() {
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
+
+            if (damageReports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #718096;">暫無數據</td></tr>';
+                return;
+            }
+
+            damageReports.forEach(report => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${report.schoolName}</td>
+                    <td>${report.damageType}</td>
+                    <td>${report.severity}</td>
+                    <td>${report.estimatedCost.toLocaleString()}</td>
+                    <td>${report.urgency}</td>
+                    <td>${report.contactPerson}</td>
+                    <td>
+                        ${report.attachments && report.attachments.length > 0 ? 
+                            `<button onclick="viewAttachments(${report.id})" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                附件 <span class="attachment-count">${report.attachments.length}</span>
+                            </button>` : 
+                            '<span style="color: #718096;">無附件</span>'
+                        }
+                    </td>
+                    <td>${report.timestamp}</td>
+                    <td>
+                        <button onclick="deleteReport(${report.id})" style="background: #e53e3e; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">刪除</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 刪除報告
+        function deleteReport(id) {
+            if (confirm('確定要刪除這筆記錄嗎？')) {
+                damageReports = damageReports.filter(report => report.id !== id);
+                updateDataTable();
+                updateStatistics();
+                showAlert('記錄已成功刪除！', 'success');
+            }
+        }
+
+        // 匯出數據
+        function exportData() {
+            if (damageReports.length === 0) {
+                alert('沒有數據可以匯出');
+                return;
+            }
+
+            const csvContent = generateCSV();
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `南投縣災損回報_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showAlert('數據匯出成功！', 'success');
+        }
+
+        // 生成CSV內容
+        function generateCSV() {
+            const headers = ['鄉鎮市', '學校名稱', '聯絡人', '聯絡電話', '電子郵件', '災害類型', '災損類型', '嚴重程度', '預估費用', '緊急程度', '詳細描述', 'Google Drive 附件', '回報時間'];
+            const csvContent = [
+                headers.join(','),
+                ...damageReports.map(report => [
+                    `"${report.township || '未指定'}"`,
+                    `"${report.schoolName}"`,
+                    `"${report.contactPerson}"`,
+                    `"${report.phone}"`,
+                    `"${report.email || ''}"`,
+                    `"${report.disasterType}"`,
+                    `"${report.damageType}"`,
+                    `"${report.severity}"`,
+                    report.estimatedCost,
+                    `"${report.urgency}"`,
+                    `"${report.description.replace(/"/g, '""')}"`,
+                    report.hasAttachments ? '已上傳' : '無附件',
+                    `"${report.timestamp}"`
+                ].join(','))
+            ].join('\n');
+
+            return '\ufeff' + csvContent; // 添加BOM以支援Excel中文顯示
+        }
+
+        // 清空所有數據
+        function clearAllData() {
+            if (confirm('確定要清空所有數據嗎？此操作無法復原。')) {
+                damageReports = [];
+                updateDataTable();
+                updateStatistics();
+                showAlert('所有數據已清空！', 'success');
+            }
+        }
+
+        // 查看報告詳情
+        function viewReport(reportId) {
+            const report = damageReports.find(r => r.id === reportId);
+            if (!report) {
+                showAlert('找不到該記錄', 'error');
+                return;
+            }
+
+            // 創建詳情模態框
+            const modal = document.createElement('div');
+            modal.className = 'attachment-modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="attachment-modal-content" style="max-width: 800px;">
+                    <h3 style="margin-bottom: 20px; color: #2d3748;">📋 災損回報詳情</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                        <div style="background: #f7fafc; padding: 15px; border-radius: 8px;">
+                            <h4 style="color: #2d3748; margin-bottom: 10px;">🏫 學校資訊</h4>
+                            <p><strong>鄉鎮市：</strong>${report.township}</p>
+                            <p><strong>學校名稱：</strong>${report.schoolName}</p>
+                            <p><strong>聯絡人：</strong>${report.contactPerson}</p>
+                            <p><strong>聯絡電話：</strong>${report.phone}</p>
+                            <p><strong>電子郵件：</strong>${report.email || '未提供'}</p>
+                        </div>
+                        
+                        <div style="background: #f7fafc; padding: 15px; border-radius: 8px;">
+                            <h4 style="color: #2d3748; margin-bottom: 10px;">⚡ 災害資訊</h4>
+                            <p><strong>災害類型：</strong>${report.disasterType}</p>
+                            <p><strong>災損類型：</strong>${report.damageType}</p>
+                            <p><strong>嚴重程度：</strong>${report.severity}</p>
+                            <p><strong>緊急程度：</strong>${report.urgency}</p>
+                            <p><strong>預估費用：</strong>${report.estimatedCost.toLocaleString()}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">📝 詳細描述</h4>
+                        <p style="line-height: 1.6;">${report.description}</p>
+                    </div>
+                    
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">📎 附件資訊</h4>
+                        <p><strong>附件狀態：</strong>${report.hasAttachments ? '✅ 已上傳至 Google Drive' : '❌ 無附件'}</p>
+                        ${report.hasAttachments ? `
+                            <p style="margin-top: 10px;">
+                                <a href="https://drive.google.com/drive/folders/1glBATd13yZgUowD0g7yXBcghb0HmqpST?usp=sharing" 
+                                   target="_blank" 
+                                   style="color: #667eea; text-decoration: underline;">
+                                    📁 查看 Google Drive 存放區
+                                </a>
+                            </p>
+                        ` : ''}
+                    </div>
+                    
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #2d3748; margin-bottom: 10px;">🕒 回報時間</h4>
+                        <p>${report.timestamp}</p>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button onclick="this.closest('.attachment-modal').remove()" 
+                                style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                            關閉詳情
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 點擊模態框外部關閉
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.remove();
+                }
+            });
+            
+            document.body.appendChild(modal);
+        }
+    </script>
+</body>
+</html>
